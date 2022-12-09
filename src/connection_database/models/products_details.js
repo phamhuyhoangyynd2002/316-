@@ -8,25 +8,28 @@ module.exports = (sequelize, DataTypes) => {
         },
         size: {
             allowNull: false,
-            type: DataTypes.STRING(10),
+            type: DataTypes.STRING(100),
         },
         amount: {
-            allowNull: false,
+            allowNull: true,
             type: DataTypes.INTEGER(11),
+            defaultValue: 0,
         },
-        out_price: {
+        price: {
             allowNull: false,
             type: DataTypes.INTEGER(11),
         },
         discout_percent: {
             allowNull: false,
             type: DataTypes.INTEGER(11),
+            defaultValue: 0,
         },
         discount_minus: {
             allowNull: false,
             type: DataTypes.INTEGER(11),
+            defaultValue: 0,
         },
-        users_Updater: {
+        user_Updater: {
             allowNull: false,
             type: DataTypes.INTEGER(11),
         },

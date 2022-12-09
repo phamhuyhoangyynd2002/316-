@@ -1,6 +1,5 @@
-const { users, products, img} = require('../connection_database/index');
+const { users, products, img, products_details} = require('../connection_database/index');
 const jwt = require('jsonwebtoken');
-const role = require('../connection_database/models/role');
 
 
 class productController {
@@ -9,51 +8,53 @@ class productController {
         try {
             if(req.session.token != null){
             var token = jwt.verify(req.session.token, process.env.KEY_TOKEN);
-            let user = {id: token.id, name: token.name, role: token.role, picture: token.picture};
+            let user = {id: token.id, name: token.name, id_role: token.id_role, picture: token.picture};
             show_detail(req, res, user);  
             }  
             else {
-                let user = {id: 0, name: null, role: 1, picture: ""};
+                let user = {id: 0, name: null, id_role: 1, picture: ""};
                 show_detail(req, res, user);    
             }   
         } catch(err) {
-                let user = {id: 0, name: null, role: 1, picture: ""};
+                let user = {id: 0, name: null, id_role: 1, picture: ""};
                 show_detail(req, res, user);
         }
     }
 
-    async add(req, res, next) {
+    // [GET]
+    async show_accessory(req, res, next) {
         try {
             if(req.session.token != null){
             var token = jwt.verify(req.session.token, process.env.KEY_TOKEN);
-            let user = {id: token.id, name: token.name, role: token.role, picture: token.picture};
-            if(user.role == 2 || user.role == 4) add(req, res, user);  
-                else res.redirect('/'); 
+            let user = {id: token.id, name: token.name, id_role: token.id_role, picture: token.picture};
+            show_accessory(req, res, user);  
             }  
             else {
-                res.redirect('/'); 
+                let user = {id: 0, name: null, id_role: 1, picture: ""};
+                show_accessory(req, res, user);    
             }   
         } catch(err) {
-            console.log(err);
-            res.redirect('/');
-        }
+                let user = {id: 0, name: null, id_role: 1, picture: ""};
+                show_accessory(req, res, user);
+        } 
     }
-
-    async postAdd(req, res, next) {
+    
+    // [GET]
+    async show_shoes(req, res, next) {
         try {
             if(req.session.token != null){
             var token = jwt.verify(req.session.token, process.env.KEY_TOKEN);
-            let user = {id: token.id, name: token.name, role: token.role, picture: token.picture};
-            if(user.role == 2 || user.role == 4) postAdd(req, res, user);  
-                else res.redirect('/'); 
+            let user = {id: token.id, name: token.name, id_role: token.id_role, picture: token.picture};
+            show_shoes(req, res, user);  
             }  
             else {
-                res.redirect('/'); 
+                let user = {id: 0, name: null, id_role: 1, picture: ""};
+                show_shoes(req, res, user);    
             }   
         } catch(err) {
-            console.log(err);
-            res.redirect('/');
-        }
+                let user = {id: 0, name: null, id_role: 1, picture: ""};
+                show_shoes(req, res, user);
+        } 
     }
 }
 
@@ -64,29 +65,52 @@ async function show_detail(req, res, user) {
     let code = req.params.slug;
     let product = await products.findOne({ where: { code: code } });
     //console.log(product);
-    let imgdb = await img.findAll({ where: {_id_Products: product.id}}); 
-    console.log(imgdb);
+    let imgdb = await img.findAll({ where: {id_Products: product.id}}); 
+    //console.log(imgdb);
+    let products_detail = await products_details.findAll({ where: {id_products: product.id}}); 
+
+    let productsSold = await products.findAll({
+        order: [['sold', 'DESC']],
+        limit: 8,
+    });
+    res.render('products/show_detail', { 
+        title: 'products', 
+        user,
+        product,
+        imgdb,
+        productsSold,
+        products_detail
+      });
     }
     catch(err) {
         res.redirect('/');
     }
 }
 
-async function add(req, res, user) {
+async function show_accessory(req, res, user) {
     try {
-        res.render('pages/home', { 
-            title: 'Thêm Sản phẩm', 
-            user, 
-          });
+    let product = await products.findAll({ where: {id_producer: 10}}); 
+
+    res.render('products/index', { 
+        title: 'products', 
+        user,
+        product
+      });
     }
     catch(err) {
         res.redirect('/');
     }
 }
 
-async function postAdd(req, res, user) {
+async function show_shoes(req, res, user) {
     try {
-        res.redirect('/');
+    let product = await products.findAll({ where: {id_producer: id_produce < 10}}); 
+
+    res.render('products/index', { 
+        title: 'products', 
+        user,
+        product
+      });
     }
     catch(err) {
         res.redirect('/');
