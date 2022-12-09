@@ -15,13 +15,14 @@ const tagModel = require("./models/tag");
 const contactModel = require("./models/contact");
 
 
-const sequelize = new Sequelize('phuongsoccer.com', 'root', '', {
-  host: '127.0.0.1',
+
+const config = require("../config");
+const sequelize = new Sequelize(config.mysql_database, config.mysql_username, config.mysql_password, {
+  host: config.mysql_host,
   dialect: 'mysql',
   logging: false,
   timezone:"+07:00"
 });
-
 (async () => await sequelize.sync({ alter: true }))();
 
 const users = usersModel(sequelize, DataTypes);
