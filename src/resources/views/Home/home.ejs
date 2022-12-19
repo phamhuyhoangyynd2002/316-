@@ -111,7 +111,7 @@
                 <% } %>
             </div>
             <div class="view-more my-5">
-				<a href="#" title="Xem tất cả">Xem tất cả</a>
+				<a href="/product" title="Xem tất cả">Xem tất cả</a>
 			</div>
         </div>
 
@@ -127,7 +127,7 @@
                         <% productsSold.forEach(function(bestProduct, index) { %>
                             <div class="block-item">
                                 <div class="img-product">
-                                    <a href="/product/<%- productsSold.code%>"><img src="/img/<%- bestProduct.product_Image %>" alt="<% bestProduct.name %>" loading="lazy"></a>
+                                    <a href="/product/<%- bestProduct.code%>"><img src="/img/<%- bestProduct.product_Image %>" alt="<% bestProduct.name %>" loading="lazy"></a>
                                 </div>
                                 <div class="btn btn-primary cart-plus"><i class="fa-solid fa-cart-plus"></i></div>
                                 <div class="icon-product"><img src="/img/hot-icon.png" alt=""></div>
@@ -142,7 +142,7 @@
                     <% } %>
             </div>
             <div class="view-more my-5">
-				<a href="#" title="Xem tất cả">Xem tất cả</a>
+				<a href="/product" title="Xem tất cả">Xem tất cả</a>
 			</div>
         </div>
 
@@ -194,15 +194,20 @@
                 <% if(newdb != '') { %>
                     <% newdb.forEach(function(post, index) { %>
                         <div class="block-item mx-3">
-                            <div class="img-new" ><img src="/img/<%- post.image %>" alt="<% post.title %>" loading="lazy"></div>
+                            <a href="/news/<%- post.id%>">
+                                <div class="img-new" ><img src="/img/<%- post.image %>" alt="<% post.title %>" loading="lazy"></div>
+                            </a>
                             <div class="info">
-                                <h6><%- post.title %></h6>
+                                <h6> <a href="/news/<%- post.id%>"><%- post.title %></a></h6>
                                 <div class="author float-start">
                                     <i class="fa-regular fa-user"></i>
-                                    <span class="ms-1"><%- post.author %></span>
+                                    <a href="/news/<%- post.id%>">
+                                        <span class="ms-1"><%- post.author %></span>
+                                    </a>
+                                    
                                 </div>
                             </div>
-                            <div class="float-end"><a href="news_detail">Đọc bài</a></div>
+                            <div class="float-end"><a href="/news/<%- post.id%>">Đọc bài</a></div>
                         </div>
                     <% }) %>
                 <% } %>
