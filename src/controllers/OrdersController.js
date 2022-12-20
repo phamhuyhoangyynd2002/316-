@@ -149,8 +149,13 @@ module.exports = new ordersController;
 async function index(req, res, user) {
     try {
         let order = await orders.findAll(
-            { where: { _id_buyer: user.id } }
+            { where: { id_buyer: user.id } }
         );
+        res.render('orders/index', { 
+            title: 'Đơn hàng', 
+            user, 
+            order
+        });
     }
     catch (err) {
         res.redirect('/');
@@ -422,14 +427,10 @@ async function PostAdd(req, res, user) {
         if(numProduct >= 0){
             new_orders.cash_payment = cashpayment;
             await new_orders.save();
-            order = new_orders;
-            res.render('orders/show_detail', { title: 'Đơn hàng của bạn', user, order });
+            res.redirect('/orders');
         }
         else {  
-            res.render('orders/failure', { 
-                title: 'Đơn đặt hàng không thành công', 
-                user, 
-            });
+            res.redirect('/orders');
         }
     }
     catch (err) {
@@ -444,8 +445,25 @@ async function PostAdd(req, res, user) {
 async function show_detail(req, res, user) {
     try {
         let id_order = req.params.slug;
+        
         let order = await orders.findByPk(id_order);
-        if( order.id_order == user.id || user.id_role != 1 ) res.render('orders/show_detail', { title: 'Đơn hàng của bạn', user, order });
+        let order_details = await orders_details.findAll({ where: { id_order: order.id } });
+        for(let i in order_details){
+            let product_detail = await products_details.findByPk(order_details[i].id_products_details);
+            let product = await products.findByPk(product_detail.id_products);
+            order_details[i].product_Image = product.product_Image;
+            order_details[i].name_product = product.name;
+            order_details[i].size = product_detail.size;
+        }
+        if( order.id_buyer == user.id || user.id_role != 1 ) 
+        {
+            res.render('orders/show_detail', 
+            { 
+                title: 'Đơn hàng của bạn', 
+                user, 
+                order,
+                order_details });
+        }
         else res.redirect('/');
     }
     catch (err) {

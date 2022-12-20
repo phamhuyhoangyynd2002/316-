@@ -6,10 +6,10 @@ const session = require('express-session');
 const fileUpload = require('express-fileupload');
 require('dotenv').config();
 
-process.env.PORT = 3000;
+process.env.PORT = 3166;
 process.env.KEY_TOKEN = 123456;
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3166;
 
 //session middleware
 app.use(session({
